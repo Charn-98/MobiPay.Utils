@@ -6,6 +6,8 @@ export interface IUser extends Document {
     passwordHash: string;
     role: 'super_admin' | 'analyst' | 'super_user';
     mfaSecret?: string;
+    resetPasswordToken?: string;
+    resetPasswordExpireDate?: Date
 }
 
 const UserSchema: Schema = new Schema({
@@ -33,7 +35,15 @@ const UserSchema: Schema = new Schema({
     mfaSecret: {
         type: String,
         required: false
-    }
+    },
+    resetPasswordToken: {
+        type: String,
+        required: false
+    },
+    resetPasswordExpireDate: {
+        type: Date,
+        required: false
+    },
 }, {
     timestamps: true
 });

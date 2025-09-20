@@ -82,6 +82,11 @@ const LoginPage: React.FC = () => {
         </Box>
         {message && <Typography color="error" sx={{ mt: 2 }}>{message}</Typography>}
         <Link to="/register">Don't have an account? Register here</Link>
+        <Box sx={{ mt: 1 }}>
+          <Link to="/forgot-password">
+            Forgot password?
+          </Link>
+        </Box>
       </Box>
     </Container>
   );

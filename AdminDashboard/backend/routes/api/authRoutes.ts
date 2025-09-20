@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { registerUser, loginUser, setupMFA, verifyMFA } from '../../controllers/authController';
+import { registerUser, loginUser, setupMFA, verifyMFA, forgotPassword, resetPassword } from '../../controllers/authController';
 import { authMiddleware } from '../../middleware/auth';
 
 const router = Router();
@@ -24,5 +24,14 @@ router.post('/mfa-setup', authMiddleware, setupMFA);
 // @access  Public
 router.post('/mfa-verify', verifyMFA);
 
+// @route   POST /api/auth/forgot-password
+// @desc    Send password reset link to user email
+// @access  Public
+router.post('/forgot-password', forgotPassword);
+
+// @route   POST /api/auth/reset-password
+// @desc    Reset password reset link to user email
+// @access  Public
+router.post('/reset-password', resetPassword);
 
 export default router;
