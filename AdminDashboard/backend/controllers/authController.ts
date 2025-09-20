@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User';
 import { loggingEvent } from '../services/loggingService';
 import { v4 as uuidv4 } from 'uuid';
+import { validatePassword } from '../services/passwordService';
 
 export const registerUser = async(req: Request, res: Response) => {
     try {
@@ -14,13 +15,20 @@ export const registerUser = async(req: Request, res: Response) => {
             return res.status(409).json({ message: 'User with this email already exists.' });
         }
 
+        const validationResult = validatePassword(password);
+        if(!validationResult){
+            return res.status(400).json({
+                message: 'Password does not meet complexity requirements.',
+            });
+        }
+
         const salt = await bcrypt.genSalt(10);
         const passwordHash = await bcrypt.hash(password, salt);
 
         const newUser = await User.create({
             id: uuidv4().toString(),
             email: email,
-            password: passwordHash,
+            passwordHash: passwordHash,
             role: role
         });
 
