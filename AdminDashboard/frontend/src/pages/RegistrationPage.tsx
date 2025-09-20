@@ -31,7 +31,7 @@ const RegistrationPage: React.FC = () => {
   return (
     <Container maxWidth="xs">
       <Box sx={{ mt: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography component="h1" variant="h5">
+        <Typography component="h1" variant="h5" color="primary">
           Admin Registration
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>

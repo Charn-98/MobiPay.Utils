@@ -5,6 +5,7 @@ export interface IUser extends Document {
     email: string;
     passwordHash: string;
     role: 'super_admin' | 'analyst' | 'super_user';
+    mfaSecret?: string;
 }
 
 const UserSchema: Schema = new Schema({
@@ -28,6 +29,10 @@ const UserSchema: Schema = new Schema({
         type: String,
         enum: ['super_admin', 'analyst', 'super_user'],
         default: 'analyst'
+    },
+    mfaSecret: {
+        type: String,
+        required: false
     }
 }, {
     timestamps: true

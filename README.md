@@ -27,3 +27,7 @@ npm install axios react-router-dom
 switching roles
 
 npm install @mui/material @emotion/react @emotion/styled @mui/icons-material
+npm install speakeasy qrcode @types/speakeasy @types/qrcode
+
+
+npm install nodemailer @types/nodemailer

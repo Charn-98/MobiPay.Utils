@@ -26,25 +26,25 @@ const DashboardPage: React.FC = () => {
   };
 
   return (
-    <Container>
+    <Container sx={{width:'100%'}}>
       <Box sx={{ mt: 8, textAlign: 'center' }}>
-        <Typography component="h1" variant="h4" gutterBottom>
+        <Typography component="h1" variant="h4" gutterBottom color="primary">
           Admin Dashboard
         </Typography>
-        <Typography variant="body1">
+        <Typography variant="body1" color="gray">
           Welcome to the admin dashboard.
         </Typography>
 
-        <Box sx={{ my: 4 }}>
+        <Box sx={{ my: 4, width:'100%'}}>
           <Typography variant="h6">Monthly Transaction Overview</Typography>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width={1200} height={300}>
             <LineChart data={dummyData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="transactions" stroke="#8884d8" />
+              <Line type="monotone" dataKey="Transactions" stroke="#8884d8" />
             </LineChart>
           </ResponsiveContainer>
         </Box>

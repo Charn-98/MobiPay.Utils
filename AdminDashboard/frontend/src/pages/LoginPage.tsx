@@ -1,27 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState,  } from 'react';
 import axios, { AxiosError } from 'axios';
-import { Link } from 'react-router-dom';
+import { Link , useNavigate } from 'react-router-dom';
 import { Container, TextField, Button, Typography, Box } from '@mui/material';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       //TODO: in real-world this url would be in env variables as well
-      console.log(email)
       const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
-      setMessage(response.data.message);
-      localStorage.setItem('token', response.data.token);
-      window.location.href = '/dashboard';
+
+      if(response.status == 202){
+          localStorage.setItem('tempToken', response.data.tempToken);
+          navigate(`/mfa-setup?id=${response.data.id}`);
+      } else if(response.status == 200) {
+          localStorage.setItem('token', response.data.token);
+          navigate(`/dashboard`);
+      }
+
     } catch (error) {
         if (axios.isAxiosError(error)) {
             const axiosError = error as AxiosError;
+            const data = axiosError.response?.data as { message: string, id: string };
+
+            if (axiosError.response?.status == 401 && data.message == 'MFA required') {
+              navigate(`/mfa-verify?id=${data.id}`);
+            }
             if (axiosError.response) {
-                setMessage((axiosError.response.data as { message: string }).message || 'Registration failed');
+                setMessage((axiosError.response.data as { message: string }).message || 'Login failed');
             } else {
                 setMessage('Network or server error occurred.');
             }
@@ -34,7 +45,7 @@ const LoginPage: React.FC = () => {
   return (
     <Container maxWidth="xs">
       <Box sx={{ mt: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography component="h1" variant="h5">
+        <Typography component="h1" variant="h5" color="primary">
           Admin Login
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
