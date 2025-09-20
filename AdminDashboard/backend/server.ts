@@ -3,6 +3,7 @@ import { connectDatabase } from './config/database.js';
 import type { Application } from 'express';
 import express from 'express';
 import authRoutes from './routes/api/authRoutes';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ connectDatabase();
 
 //run middleware
 app.use(express.json());
+app.use(cors());
 
 //register routes
 app.use('/api/auth', authRoutes);

@@ -22,3 +22,8 @@ npm install jest @types/jest ts-jest --save-dev
 bcrypt for password hashing
 jsonwebtoken for secure and stateless tokens - caters for scaling
 npm install password-validator @types/password-validator
+npm install axios react-router-dom
+
+switching roles
+
+npm install @mui/material @emotion/react @emotion/styled @mui/icons-material
