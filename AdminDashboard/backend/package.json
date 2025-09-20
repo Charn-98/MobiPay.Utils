@@ -2,8 +2,7 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
-  "main": "index.js",
+  "main": "dist/server.js",
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -26,6 +25,13 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node dist/server.js",
-    "dev": "concurrently \"npx tsc -w\" \"nodemon dist/server.js\""
+    "dev": "concurrently \"npx tsc -w\" \"nodemon dist/server.js\"",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "concurrently": "^9.2.1",
+    "jest": "^30.1.3",
+    "ts-jest": "^29.4.4"
   }
 }

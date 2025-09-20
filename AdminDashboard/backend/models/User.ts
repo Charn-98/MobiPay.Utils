@@ -1,5 +1,4 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { v4 as uuidv4 } from 'uuid'
 
 export interface IUser extends Document {
     id: string;
@@ -12,8 +11,7 @@ const UserSchema: Schema = new Schema({
     id: {
         type: String,
         required: true,
-        unique: true,
-        default: uuidv4 //this should automatically generate a guid
+        unique: true
     },
     email: {
         type: String,
