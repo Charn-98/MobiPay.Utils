@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MFASetupPage from './pages/MFASetupPage';
 import MFAVerificationPage from './pages/MFAVerificationPage';
 import DashboardPage from './pages/DashboardPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
           <Route path="/mfa-setup" element={<MFASetupPage/>} />
           <Route path="/mfa-verify" element={<MFAVerificationPage/>} />
           <Route path="/dashboard" element={<DashboardPage/>} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage/>} />
+          <Route path="/reset-password/:token" element={<ResetPasswordPage/>} />
           <Route path="/" element={<LoginPage />} /> {/*default*/}
         </Routes>
       </div>

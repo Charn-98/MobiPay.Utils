@@ -7,6 +7,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { validatePassword } from '../services/passwordService';
 import speakeasy from 'speakeasy';
 import QRCode from 'qrcode';
+import nodemailer from 'nodemailer';
+import crypto from 'crypto';
 
 export const registerUser = async(req: Request, res: Response) => {
     try {
@@ -144,3 +146,80 @@ export const verifyMFA = async (req: Request, res: Response) => {
         res.status(500).json({ message: 'Server error' });
     }
 }
+
+export const forgotPassword = async (req: Request, res: Response) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email: email });
+        if (!user) {
+            return res.status(200).json({ message: 'If a user with that email exists, a password reset link has been sent.' });
+        }
+
+        const token = crypto.randomBytes(20).toString('hex');
+        user.resetPasswordToken = token;
+        user.resetPasswordExpireDate = new Date(Date.now() + 3600000); //this is set to expire in 1 hour
+        await user.save();
+
+        //not sure if there is another way to do this
+        //personal credentials commented out
+        const transporter = nodemailer.createTransport({
+            service: 'Gmail',
+            auth: {
+                user: 'xxx',
+                pass: 'xxx',
+            },
+        });
+
+        //replace link with real link
+        const mailOptions = {
+            to: user.email,
+            from: 'xxx',
+            subject: 'Password Reset',
+            text: `You are receiving this because you have requested the reset of the password for your account.
+                   Please click on the following link, or paste this into your browser to complete the process:
+                   http://localhost:5173/reset-password/${token}
+                   If you did not request this, please ignore this email and your password will remain unchanged.`,
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        res.status(200).json({ message: 'Password reset link sent.' });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+export const resetPassword = async (req: Request, res: Response) => {
+    try {
+        const { token, newPassword } = req.body;
+        const user = await User.findOne({
+            resetPasswordToken: token,
+            resetPasswordExpireDate: { $gt: new Date() }
+        });
+
+        if (!user) {
+            return res.status(400).json({ message: 'Password reset token is invalid or has expired.' });
+        }
+
+        const validationResult = validatePassword(newPassword);
+        if(!validationResult){
+            return res.status(400).json({
+                message: 'Password does not meet complexity requirements.',
+            });
+        }
+
+        //TODO: Add logic for old password can't be the same as new password
+
+        const salt = await bcrypt.genSalt(10);
+        user.passwordHash = await bcrypt.hash(newPassword, salt);
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpireDate = undefined;
+
+        await user.save();
+
+        res.status(200).json({ message: 'Password has been reset.' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
+    }
+};
