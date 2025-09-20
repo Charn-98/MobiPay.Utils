@@ -9,7 +9,7 @@
 npm-debug.log*
 yarn-debug.log*
 /frontend/build/
-/backend/dist/
+/AdminDashboard/backend/dist/
 
 #IDE files
 .vscode/
