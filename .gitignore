@@ -1,0 +1,19 @@
+#dependency folders
+/node_modules
+/AdminDashboard/backend/node_modules
+
+#environment variables
+.env
+
+#log and build files
+npm-debug.log*
+yarn-debug.log*
+/frontend/build/
+/backend/dist/
+
+#IDE files
+.vscode/
+
+#oerating system files
+.DS_Store
+Thumbs.db
