@@ -17,7 +17,7 @@ const MFAVerificationPage: React.FC = () => {
         return;
     }
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/mfa-verify', { id, token });
+      const response = await axios.post('http://localhost:5000/auth/admin/verify-totp', { id, token });
       localStorage.setItem('token', response.data.token);
       navigate('/dashboard');
     } catch (error: any) {

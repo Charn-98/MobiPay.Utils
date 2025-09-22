@@ -13,14 +13,16 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     try {
       //TODO: in real-world this url would be in env variables as well
-      const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      const response = await axios.post('http://localhost:5000/auth/admin/login', { email, password });
 
       if(response.status == 202){
           localStorage.setItem('tempToken', response.data.tempToken);
-          navigate(`/mfa-setup?id=${response.data.id}`);
+          navigate(`/totp-setup?id=${response.data.id}`);
       } else if(response.status == 200) {
           localStorage.setItem('token', response.data.token);
-          navigate(`/dashboard`);
+          setTimeout(() => {
+              navigate('/dashboard');
+          }, 1000);
       }
 
     } catch (error) {
@@ -29,12 +31,7 @@ const LoginPage: React.FC = () => {
             const data = axiosError.response?.data as { message: string, id: string };
 
             if (axiosError.response?.status == 401 && data.message == 'MFA required') {
-              navigate(`/mfa-verify?id=${data.id}`);
-            }
-            if (axiosError.response) {
-                setMessage((axiosError.response.data as { message: string }).message || 'Login failed');
-            } else {
-                setMessage('Network or server error occurred.');
+              navigate(`/verify-totp?id=${data.id}`);
             }
         } else {
             setMessage('An unknown error occurred.');

@@ -14,7 +14,6 @@ export const loggingEvent = async (
             details,
         });
         await loggingEntry.save();
-        console.log(`Audit log created for event: ${eventType}`);
     } catch (err) {
         console.error('Failed to create audit log entry:', err);
     }

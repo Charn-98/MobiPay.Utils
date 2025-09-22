@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   LineChart,
   Line,
@@ -9,6 +9,8 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { Container, Typography, Box, Button } from '@mui/material';
 
 const dummyData = [
@@ -20,10 +22,38 @@ const dummyData = [
 ];
 
 const DashboardPage: React.FC = () => {
+  const [user, setUser] = useState<{email: string, role: string}>();
+  const navigate = useNavigate();
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     window.location.href = '/login';
   };
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+      try {
+        const response = await axios.get('http://localhost:5000/api/admin/profile', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setUser(response.data);
+      } catch (error) {
+        console.error('Failed to fetch user profile:', error);
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
+    };
+    fetchUserProfile();
+  }, [navigate]);
+
 
   return (
     <Container sx={{width:'100%'}}>
@@ -31,9 +61,16 @@ const DashboardPage: React.FC = () => {
         <Typography component="h1" variant="h4" gutterBottom color="primary">
           Admin Dashboard
         </Typography>
-        <Typography variant="body1" color="gray">
-          Welcome to the admin dashboard.
-        </Typography>
+        {user &&
+          <Box>
+            <Typography variant="body1" color="gray">
+              Welcome to the admin dashboard, {user.email}!
+            </Typography>
+            <Typography>
+              Roles: {user.role}
+            </Typography>
+          </Box>
+        }
 
         <Box sx={{ my: 4, width:'100%'}}>
           <Typography variant="h6">Monthly Transaction Overview</Typography>
