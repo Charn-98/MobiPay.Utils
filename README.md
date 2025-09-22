@@ -1,51 +1,23 @@
 # MobiPay.Utils
 
-npm init -y
-npm install mongoose mongodb
-npm install typescript @types/node @types/express @types/mongoose @types/bcrypt @types/jsonwebtoken
-npm install express mongoose dotenv bcrypt jsonwebtoken
-npx tsc --init
-npm install @types/mongoose
-npm install uuid @types/uuid
+SETUP:
+- backend: npm run dev
+- frontend: npm run dev
+- mongodb: create a clean database and replace connection string in .env
 
-npm install typescript @types/node @types/express @types/mongoose @types/bcrypt @types/jsonwebtoken dotenv express mongoose bcrypt jsonwebtoken
+STACK USED:
+- MERN (MongoDB, Express, React, Node)
 
+LIBRARIES worth mentioning:
+- Used MUI for the react front-end
+- speakeasy for QR code setup
 
-npm install -g nodemon
-npm install concurrently --save-dev
+ISSUES:
+- I wanted to create a free AWS account to use KMS for enabling encryption at rest in the database. Unfortunately, AWS needed a few days to validate my card details.
+- Because of the AWS issue I also couldn't test the "Forgot Password" feature properly, as I wanted to use SES for this. I did implement the code regardless (I think it should work)
+- Docker - I added the files but ran into errors when either running or building the image. After debugging for some time I decided to give up for the time being and will likely look into it again later on.
 
-npm install jest @types/jest ts-jest --save-dev
+WHAT WAS RESEARCHED & WHERE WAS CHATPGPT USED?
+- I used ChatGpt to double check security related requirements such as rate limiting and other middleware related tasks
+- I've never worked with MongoDB or Express/Node, so there was research done in this area
 
-
-
-
-bcrypt for password hashing
-jsonwebtoken for secure and stateless tokens - caters for scaling
-npm install password-validator @types/password-validator
-npm install axios react-router-dom
-
-switching roles
-
-npm install @mui/material @emotion/react @emotion/styled @mui/icons-material
-npm install speakeasy qrcode @types/speakeasy @types/qrcode
-
-
-npm install nodemailer @types/nodemailer
-
-
-services layer???
-
-
-npm install express-rate-limit @types/express-rate-limit
-
-npm install @aws-sdk/client-ses
-
-
-npm install joi
-
-npm install express-mongo-sanitize ///xss cross site scripting
-
-joi-password-complexity
-
-
-ChatGPT - where did I use it
