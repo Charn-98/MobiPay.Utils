@@ -7,8 +7,18 @@ import { v4 as uuidv4 } from 'uuid';
 import { validatePassword } from '../services/passwordService';
 import speakeasy from 'speakeasy';
 import QRCode from 'qrcode';
-import nodemailer from 'nodemailer';
+import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import crypto from 'crypto';
+
+
+//global initialization
+const sesClient = new SESClient({
+  region: 'us-east-1', // Replace with your AWS region
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  },
+});
 
 export const registerUser = async(req: Request, res: Response) => {
     try {
@@ -51,7 +61,6 @@ export const registerUser = async(req: Request, res: Response) => {
 export const loginUser = async(req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
-
         //lookup user/exists check
         const user = await User.findOne({ email: email });
         if(!user){
@@ -77,8 +86,8 @@ export const loginUser = async(req: Request, res: Response) => {
         }
 
         await loggingEvent(user?.id, 'LOGIN_SUCCESSFUL', req.ip!, {email});
-
-        res.status(200).json({message: 'Login successful.'});
+        //will navigate to verify the existing token
+        return res.status(401).json({ message: 'MFA required', id: user.id });
     } catch (error) {
         if (error instanceof Error) {
             console.error(error.message);
@@ -118,7 +127,6 @@ export const verifyMFA = async (req: Request, res: Response) => {
     try {
         const { id, token } = req.body;
         const user = await User.findOne( { id: id } );
-        console.log(id)
         if(!user || !user.mfaSecret){
             return res.status(400).json({message: 'Invalid request'});
         }
@@ -160,32 +168,32 @@ export const forgotPassword = async (req: Request, res: Response) => {
         user.resetPasswordExpireDate = new Date(Date.now() + 3600000); //this is set to expire in 1 hour
         await user.save();
 
-        //not sure if there is another way to do this
-        //personal credentials commented out
-        const transporter = nodemailer.createTransport({
-            service: 'Gmail',
-            auth: {
-                user: 'xxx',
-                pass: 'xxx',
+        const resetLink = `http://localhost:5000/reset-password/${token}`;
+        const mailParams = {
+            Destination: {
+                ToAddresses: [user.email],
             },
-        });
-
-        //replace link with real link
-        const mailOptions = {
-            to: user.email,
-            from: 'xxx',
-            subject: 'Password Reset',
-            text: `You are receiving this because you have requested the reset of the password for your account.
-                   Please click on the following link, or paste this into your browser to complete the process:
-                   http://localhost:5173/reset-password/${token}
-                   If you did not request this, please ignore this email and your password will remain unchanged.`,
+            Message: {
+                Body: {
+                Text: {
+                    Charset: 'UTF-8',
+                    Data: `You are receiving this because you have requested the reset of the password for your account. Please click on the following link: ${resetLink} If you did not request this, please ignore this email.`,
+                },
+                },
+                Subject: {
+                Charset: 'UTF-8',
+                Data: 'Password Reset',
+                },
+            },
+            Source: process.env.SES_SENDER_EMAIL!,
         };
 
-        await transporter.sendMail(mailOptions);
+            // Send the email using SES
+            const command = new SendEmailCommand(mailParams);
+            await sesClient.send(command);
 
         res.status(200).json({ message: 'Password reset link sent.' });
     } catch (error) {
-        console.log(error)
         res.status(500).json({ message: 'Server error' });
     }
 };

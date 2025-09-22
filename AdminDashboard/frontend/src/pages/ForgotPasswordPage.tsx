@@ -9,7 +9,7 @@ const ForgotPasswordPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/forgot-password', { email });
+      const response = await axios.post('http://localhost:5000/auth/admin/forgot-password', { email });
       setMessage(response.data.message);
     } catch (error: any) {
       setMessage(error.response?.data.message || 'An error occurred. Please try again.');

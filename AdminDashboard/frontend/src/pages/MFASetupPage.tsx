@@ -28,7 +28,7 @@ const MFASetupPage: React.FC = () => {
 
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/auth/mfa-setup",
+          "http://localhost:5000/auth/admin/totp-setup",
           {},
           {
             headers: {
@@ -48,7 +48,7 @@ const MFASetupPage: React.FC = () => {
   const handleVerify = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/mfa-verify",
+        "http://localhost:5000/auth/admin/verify-totp",
         { id, token }
       );
 

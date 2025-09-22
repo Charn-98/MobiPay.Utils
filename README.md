@@ -34,3 +34,18 @@ npm install nodemailer @types/nodemailer
 
 
 services layer???
+
+
+npm install express-rate-limit @types/express-rate-limit
+
+npm install @aws-sdk/client-ses
+
+
+npm install joi
+
+npm install express-mongo-sanitize ///xss cross site scripting
+
+joi-password-complexity
+
+
+ChatGPT - where did I use it

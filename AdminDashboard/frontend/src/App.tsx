@@ -15,8 +15,8 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage/>} />
           <Route path="/register" element={<RegistrationPage/>} />
-          <Route path="/mfa-setup" element={<MFASetupPage/>} />
-          <Route path="/mfa-verify" element={<MFAVerificationPage/>} />
+          <Route path="/totp-setup" element={<MFASetupPage/>} />
+          <Route path="/verify-totp" element={<MFAVerificationPage/>} />
           <Route path="/dashboard" element={<DashboardPage/>} />
           <Route path="/forgot-password" element={<ForgotPasswordPage/>} />
           <Route path="/reset-password/:token" element={<ResetPasswordPage/>} />

@@ -12,7 +12,7 @@ const RegistrationPage: React.FC = () => {
     e.preventDefault();
     try {
       //TODO: in real-world this url would be in env variables as well
-      const response = await axios.post('http://localhost:5000/api/auth/register', { email, password, role: 'super_admin' });
+      const response = await axios.post('http://localhost:5000/auth/admin/register', { email, password, role: 'super_admin' });
       setMessage(response.data.message);
     } catch (error) {
         if (axios.isAxiosError(error)) {
