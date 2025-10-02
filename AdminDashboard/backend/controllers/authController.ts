@@ -46,7 +46,7 @@ export const registerUser = async(req: Request, res: Response) => {
             role: role
         });
 
-        await loggingEvent(newUser.id, "REGISTRATION_SUCCESS", req.ip!, {email});
+        await loggingEvent(newUser?.id, "REGISTRATION_SUCCESS", req.ip!, {email});
 
         res.status(201).json({message: 'User registered successfully'});
     } catch (error) {
@@ -99,7 +99,8 @@ export const loginUser = async(req: Request, res: Response) => {
 
 export const setupMFA = async(req: Request, res: Response) => {
     try {
-        const user = await User.findOne( { id: req.user!.id });
+        const { id } = req.body;
+        const user = await User.findOne( { id: id });
         if(!user){
             return res.status(404).json({ message: 'User was not found'});
         }

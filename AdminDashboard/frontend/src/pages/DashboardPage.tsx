@@ -81,7 +81,7 @@ const DashboardPage: React.FC = () => {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="Transactions" stroke="#8884d8" />
+              <Line type="monotone" dataKey="transactions" stroke="#8884d8" />
             </LineChart>
           </ResponsiveContainer>
         </Box>

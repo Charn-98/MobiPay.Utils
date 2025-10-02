@@ -29,7 +29,7 @@ const MFASetupPage: React.FC = () => {
       try {
         const response = await axios.post(
           "http://localhost:5000/auth/admin/totp-setup",
-          {},
+          { id },
           {
             headers: {
               Authorization: `Bearer ${tempToken}`,
